@@ -16,6 +16,8 @@ struct Edge {
 std::vector<Edge> generateDAG(int nodes, int saturation);
 std::vector<Edge> user();  
 
+int initializeMenu(std::vector<Edge> graph, std::string type);
+
 void printGraph(std::string action, std::vector<Edge> graph);
 void printMatrix(const std::vector<Edge>& edges);
 
