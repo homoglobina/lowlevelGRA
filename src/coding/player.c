@@ -2,6 +2,8 @@
 #include <SFML/Graphics.h>
 #include <SFML/Window.h>
 #include <stdio.h>
+#include <time.h>
+
 
 sfSprite* sprite;
 double x = 420.0f; 
@@ -9,6 +11,9 @@ double y = 20.0f;
 double angle = 0.0f;
 float speed = 1.5f;
 int n = 0;
+time_t lastSpacePressTime = 0;
+double spaceCooldown = 0.5; 
+
 
 void player() {
     sfTexture* texture = sfTexture_createFromFile("coding/textures/plane.png", NULL);
@@ -42,8 +47,8 @@ void drawPlayer(sfRenderWindow* window, struct bulletStruct* bullets) {
     if (sfKeyboard_isKeyPressed(sfKeyS)) ++j;
     if (sfKeyboard_isKeyPressed(sfKeyD)) ++i;
 
-    if (speed > 6.0f) speed = 6.0f;
-    if (speed < 2.5f && j != 0 || i != 0) speed += 0.25f;
+    if (speed > 5.0f) speed = 5.0f;
+    if ((speed < 2.5f && j != 0) || (speed < 2.5f && i != 0)) speed += 0.125f;
     if (speed > 1.5f && j == 0 && i == 0) speed -= 0.25f;
 
     if (i == 0 && j == 0) {
@@ -95,17 +100,15 @@ void drawPlayer(sfRenderWindow* window, struct bulletStruct* bullets) {
     sfSprite_setOrigin(sprite, origin);
 
 
-    // if (event.type == sfEvtKeyPressed && event.key.code == sfKeySpace) {
-    //     if (n == NUM_BULLETS) n = 0;
-    //     activateBullet(&bullets[n], angle, x, y);
-    //     n++;
-    // }
-
 
     if (sfKeyboard_isKeyPressed(sfKeySpace)) {
-        if (n == NUM_BULLETS) n = 0;
-        activateBullet(&bullets[n], angle, x, y);
-        n++;
+        time_t currentTime = time(NULL);
+        if (currentTime - lastSpacePressTime >= spaceCooldown) {
+            if (n == NUM_BULLETS) n = 0;
+            activateBullet(&bullets[n], angle, x, y);
+            n++;
+            lastSpacePressTime = currentTime;
+        }
     }
 
     // Draw the sprite onto the window

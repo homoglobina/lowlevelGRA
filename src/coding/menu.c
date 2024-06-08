@@ -37,7 +37,7 @@ int menu() {
     if (!window)
         return 1;
 
-    sfVector2i position = {0, 0};
+    sfVector2i position = {20, 20};
     sfRenderWindow_setPosition(window, position);
 
     int choice;
@@ -53,7 +53,7 @@ int menu() {
 
             }
             else if (sfKeyboard_isKeyPressed(28)){
-                return choice = 2;
+                //return choice = 2;
                 //sfRenderWindow_close(window);
             }
             else if (sfKeyboard_isKeyPressed(29)){
