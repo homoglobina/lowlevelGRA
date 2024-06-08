@@ -1,11 +1,9 @@
-#ifndef GRAPHS_H
-#define GRAPHS_H
+#ifndef GAME_H
+#define GAME_H
 
-#include <string>
-#include <vector>
+#include <SFML/Graphics.h>
 
+void player();
+void draw(sfRenderWindow* window);
 
-
-
-
-#endif // GRAPHS_H
+#endif // GAME_H

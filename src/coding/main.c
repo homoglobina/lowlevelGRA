@@ -1,17 +1,17 @@
 #include <SFML/Graphics.h>
 #include <SFML/Window.h>
-#include <game.h>
+#include "game.h"
 
 int main()
 {
-    sfVideoMode mode = {800, 600, 64};
-    sfRenderWindow* window = sfRenderWindow_create(mode, "Gra", sfResize | sfClose, NULL);
+    // Create the window
+    sfVideoMode mode = {800, 600, 32};
+    sfRenderWindow* window = sfRenderWindow_create(mode, "SFML TUTORIAL", sfResize | sfClose, NULL);
     if (!window)
         return 1;
 
-    sfCircleShape* shape = sfCircleShape_create();
-    sfCircleShape_setRadius(shape, 200.f);
-    sfCircleShape_setFillColor(shape, sfBlue);
+    // Call the function to load the texture and create the sprite
+    player();
 
     while (sfRenderWindow_isOpen(window))
     {
@@ -22,12 +22,17 @@ int main()
                 sfRenderWindow_close(window);
         }
 
+        if (sfKeyboard_isKeyPressed(0))
+            sfRenderWindow_close(window);
+
         sfRenderWindow_clear(window, sfBlack);
-        sfRenderWindow_drawCircleShape(window, shape, NULL);
+
+        // Draw the sprite onto the window
+        draw(window);
+
         sfRenderWindow_display(window);
     }
 
-    sfCircleShape_destroy(shape);
     sfRenderWindow_destroy(window);
     return 0;
 }
