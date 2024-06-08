@@ -4,10 +4,13 @@
 
 #include <stdio.h>
 
-// Declare a global variable to hold the sprite
 sfSprite* sprite;
-double x = 0.0f; 
-double y = 0.0f;
+double x = 420.0f; 
+double y = 20.0f;
+double angle = 0.0f;
+float speed = 1.5f;
+
+
 
 void player()
 {
@@ -29,7 +32,7 @@ void player()
     sfSprite_setScale(sprite, scale);
 
     // Set the sprite's position
-    sfVector2f position = {100.0f, 100.0f};
+    sfVector2f position = {x, y};
     sfSprite_setPosition(sprite, position);
 
 
@@ -41,43 +44,46 @@ void player()
 
 void drawPlayer(sfRenderWindow* window)
 {
-    double tempx = x;
-    double tempy = y;
-    double angle;
+    int i = 0;
+    int j = 0;
 
 
 
-    // Sterowanie
-    if (sfKeyboard_isKeyPressed(0) ){        // A
-        --x;
-        }
-    if (sfKeyboard_isKeyPressed(3)){          // D
-        ++x;
-        }
-    if (sfKeyboard_isKeyPressed(18)){        // S
-        ++y;
-        }
-    if (sfKeyboard_isKeyPressed(22)){      // W
-        --y;
-        }
+
+    // Rotacja
+    if (sfKeyboard_isKeyPressed(22))--j;      // W
+    if (sfKeyboard_isKeyPressed(0))--i;       // A
+    if (sfKeyboard_isKeyPressed(18))++j;      // S
+    if (sfKeyboard_isKeyPressed(3))++i;       // D
+
+    if (speed > 8.0f) speed = 8.0f;
+    if (speed < 2.5f && j != 0 || i != 0 ) speed += 0.25f;
+    if (speed > 1.5f && j == 0 && i == 0) speed -= 0.25f;
+
+    
 
 
-    if (x < tempx){
-        if (y > tempy){
+
+
+    if (i == 0 && j == 0){
+        // no rotation
+    }
+    else if (i < 0){
+        if (j > 0){
             angle = 225.f;
         }
-        else if (y < tempy){
+        else if (j < 0){
             angle = 315.f;
         }
         else {
             angle = 270.f;
         }
     }
-    else if (x > tempx){
-        if (y > tempy){
+    else if (i > 0){
+        if (j > 0){
             angle = 135.f;
         }
-        else if (y < tempy){
+        else if (j < 0){
             angle = 45.f;
         }
         else {
@@ -85,21 +91,31 @@ void drawPlayer(sfRenderWindow* window)
         }
     }
     else {
-        if (y > tempy){
+        if (j > 0){
             angle = 180.f;
         }
-        else if (y < tempy){
+        else if (j < 0){
             angle = 0.f;
+            sfSprite_setRotation(sprite, angle);
         }
     }
     
 
+    if (angle) {
+        sfSprite_setRotation(sprite, angle);
+    }
 
-    sfSprite_setRotation(sprite,angle);
 
 
+    sfVector2f position = trigPosition(x, y, angle, speed);
+    x = position.x;
+    y = position.y;
 
-    sfVector2f position = {x,y};
+    position = checkPosition(x,y,WIDTH,HEIGHT); // out of bounds
+    x = position.x;
+    y = position.y;
+
+    
     sfSprite_setPosition(sprite, position);
 
     

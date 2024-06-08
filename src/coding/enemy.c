@@ -51,7 +51,6 @@ void drawEnemy(sfRenderWindow* window, struct enemyStruct* enemy)
     sfSprite_setPosition(enemy->sprite, position);
 
 
-    // sfRenderWindow_clear(window, sfBlue);
 
     // Draw the sprite onto the window
     sfRenderWindow_drawSprite(window, enemy->sprite, NULL);
