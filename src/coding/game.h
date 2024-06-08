@@ -14,6 +14,7 @@ struct enemyStruct {
     double x;
     double y;
     int active;
+    int axis;
 };
 
 struct bulletStruct {
@@ -24,6 +25,9 @@ struct bulletStruct {
     double speed;
     int active;
 };
+
+int checkShot(struct bulletStruct* bullet, struct enemyStruct* enemy);
+
 
 sfVector2f checkPosition(float x, float y, int width, int height);
 sfVector2f trigPosition(float x, float y, float angle, float distance);

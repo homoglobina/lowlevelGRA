@@ -2,6 +2,7 @@
 #include <SFML/Graphics.h>
 #include <SFML/Window.h>
 #include <stdio.h>
+#include <math.h>
 
 void initializeBullet(struct bulletStruct* bullet) {
     sfTexture* texture = sfTexture_createFromFile("coding/textures/star.png", NULL);
@@ -12,13 +13,11 @@ void initializeBullet(struct bulletStruct* bullet) {
 
     sfTexture_setSmooth(texture, 1);
 
-    // Create the sprite and set its texture
     bullet->sprite = sfSprite_create();
     sfSprite_setTexture(bullet->sprite, texture, sfTrue);
     sfSprite_setColor(bullet->sprite, sfRed);
 
-    // Set the sprite's scale
-    sfVector2f scale = {0.04f, 0.04f};
+    sfVector2f scale = {0.01f, 0.01f};
     sfSprite_setScale(bullet->sprite, scale);
 
     bullet->active = 0;
@@ -36,7 +35,7 @@ void activateBullet(struct bulletStruct* bullet, float startAngle, float dx, flo
     bullet->x = dx;
     bullet->y = dy;
     bullet->angle = startAngle;
-    bullet->speed = 17.0f;
+    bullet->speed = 8.5f;
 }
 
 void drawBullet(struct bulletStruct* bullet, sfRenderWindow* window) {
@@ -46,19 +45,36 @@ void drawBullet(struct bulletStruct* bullet, sfRenderWindow* window) {
     bullet->x = position.x;
     bullet->y = position.y;
 
-    // Deactivate bullet if it goes out of bounds
     if (bullet->x < 0 || bullet->x > WIDTH || bullet->y < 0 || bullet->y > HEIGHT) {
         bullet->active = 0;
         return;
     }
 
-    // Get the size of the texture
     sfVector2u textureSize = sfTexture_getSize(sfSprite_getTexture(bullet->sprite));
-
-    // Set the origin to the center of the texture
     sfVector2f origin = {textureSize.x / 2.0f, textureSize.y / 2.0f};
     sfSprite_setOrigin(bullet->sprite, origin);
     sfSprite_setPosition(bullet->sprite, position);
     sfSprite_setRotation(bullet->sprite, bullet->angle);
     sfRenderWindow_drawSprite(window, bullet->sprite, NULL);
+
+    
+
+
+}
+
+int checkShot(struct bulletStruct* bullet, struct enemyStruct* enemy) {
+    if (bullet->active && enemy->active) {
+        // Calculate the distance between bullet and enemy
+        float dx = bullet->x - enemy->x;
+        float dy = bullet->y - enemy->y;
+        float distanceSquared = dx * dx + dy * dy;
+        if (distanceSquared < 250.f) { 
+            enemy->hp -= 5;
+            if (enemy->hp <= 0) {
+                enemy->active = 0;
+            }
+            return 1; // Return 1 to indicate a hit
+        }
+    }
+    return 0; // Return 0 to indicate no hit
 }

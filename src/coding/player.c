@@ -24,7 +24,7 @@ void player() {
     sfSprite_setTexture(sprite, texture, sfTrue);
 
     // Set the sprite's scale
-    sfVector2f scale = {0.5f, 0.5f};
+    sfVector2f scale = {0.2f, 0.2f};
     sfSprite_setScale(sprite, scale);
 
     // Set the sprite's position
@@ -42,7 +42,7 @@ void drawPlayer(sfRenderWindow* window, struct bulletStruct* bullets) {
     if (sfKeyboard_isKeyPressed(sfKeyS)) ++j;
     if (sfKeyboard_isKeyPressed(sfKeyD)) ++i;
 
-    if (speed > 8.0f) speed = 8.0f;
+    if (speed > 6.0f) speed = 6.0f;
     if (speed < 2.5f && j != 0 || i != 0) speed += 0.25f;
     if (speed > 1.5f && j == 0 && i == 0) speed -= 0.25f;
 
@@ -93,6 +93,14 @@ void drawPlayer(sfRenderWindow* window, struct bulletStruct* bullets) {
     // Set the origin to the center of the texture
     sfVector2f origin = {textureSize.x / 2.0f, textureSize.y / 2.0f};
     sfSprite_setOrigin(sprite, origin);
+
+
+    // if (event.type == sfEvtKeyPressed && event.key.code == sfKeySpace) {
+    //     if (n == NUM_BULLETS) n = 0;
+    //     activateBullet(&bullets[n], angle, x, y);
+    //     n++;
+    // }
+
 
     if (sfKeyboard_isKeyPressed(sfKeySpace)) {
         if (n == NUM_BULLETS) n = 0;
