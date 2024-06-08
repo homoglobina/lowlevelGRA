@@ -5,7 +5,7 @@
 int main() {
     // Create the window
     sfVideoMode mode = {WIDTH, HEIGHT, 32};
-    sfRenderWindow* window = sfRenderWindow_create(mode, "TOP GUN", sfResize | sfClose, NULL);
+    sfRenderWindow* window = sfRenderWindow_create(mode, "TOP GUN\t THE GAME", sfResize | sfClose, NULL);
     if (!window)
         return 1;
 
@@ -24,6 +24,9 @@ int main() {
         initializeBullet(&bullets[i]);
     }
 
+
+
+
     while (sfRenderWindow_isOpen(window)) {
         sfEvent event;
         while (sfRenderWindow_pollEvent(window, &event)) {
@@ -32,8 +35,19 @@ int main() {
         }
 
         // Exit
-        if (sfKeyboard_isKeyPressed(sfKeyEscape))
-            sfRenderWindow_close(window);
+        if (sfKeyboard_isKeyPressed(sfKeyEscape)){
+            int choice = menu();
+            if (choice == 1) {
+                sfRenderWindow_close(window);
+            }
+            else if (choice == 2) {
+                // sfRenderWindow_close(window);
+            }
+            else if (choice == 3) {
+                sfRenderWindow_close(window);
+            }
+        }
+
 
         // Clear the window
         sfRenderWindow_clear(window, sfBlue);

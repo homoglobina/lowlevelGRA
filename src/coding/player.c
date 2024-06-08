@@ -94,9 +94,11 @@ void drawPlayer(sfRenderWindow* window, struct bulletStruct* bullets) {
     sfVector2f origin = {textureSize.x / 2.0f, textureSize.y / 2.0f};
     sfSprite_setOrigin(sprite, origin);
 
-    if (n == NUM_BULLETS) n = 0;
-    activateBullet(&bullets[n], angle, x, y);
-    n++;
+    if (sfKeyboard_isKeyPressed(sfKeySpace)) {
+        if (n == NUM_BULLETS) n = 0;
+        activateBullet(&bullets[n], angle, x, y);
+        n++;
+    }
 
     // Draw the sprite onto the window
     sfRenderWindow_drawSprite(window, sprite, NULL);

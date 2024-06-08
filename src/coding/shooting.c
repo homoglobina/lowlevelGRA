@@ -3,12 +3,9 @@
 #include <SFML/Window.h>
 #include <stdio.h>
 
-
-void initializeBullet(struct bulletStruct* bullet)
-{
+void initializeBullet(struct bulletStruct* bullet) {
     sfTexture* texture = sfTexture_createFromFile("coding/textures/star.png", NULL);
-    if (!texture)
-    {
+    if (!texture) {
         printf("Error loading texture\n");
         return;
     }
@@ -21,7 +18,7 @@ void initializeBullet(struct bulletStruct* bullet)
     sfSprite_setColor(bullet->sprite, sfRed);
 
     // Set the sprite's scale
-    sfVector2f scale = {0.1f, 0.1f};
+    sfVector2f scale = {0.04f, 0.04f};
     sfSprite_setScale(bullet->sprite, scale);
 
     bullet->active = 0;
@@ -31,30 +28,29 @@ void initializeBullet(struct bulletStruct* bullet)
     bullet->speed = 0.0f;
     sfVector2f position = {bullet->x, bullet->y};
     sfSprite_setPosition(bullet->sprite, position);
-    sfSprite_setRotation(bullet->sprite,90.f); 
-
+    sfSprite_setRotation(bullet->sprite, 90.f);
 }
 
-void activateBullet(struct bulletStruct* bullet, float startAngle, float dx, float dy)
-{
+void activateBullet(struct bulletStruct* bullet, float startAngle, float dx, float dy) {
     bullet->active = 1;
     bullet->x = dx;
     bullet->y = dy;
     bullet->angle = startAngle;
-
+    bullet->speed = 17.0f;
 }
 
-
 void drawBullet(struct bulletStruct* bullet, sfRenderWindow* window) {
-    float x = bullet->x;
-    float y = bullet->y;
-    float angle = bullet->angle;
-    float speed = bullet->speed;
+    if (!bullet->active) return;
 
-    speed = 10.0f;
-    sfVector2f position = trigPosition(x, y, angle, speed);
+    sfVector2f position = trigPosition(bullet->x, bullet->y, bullet->angle, bullet->speed);
     bullet->x = position.x;
     bullet->y = position.y;
+
+    // Deactivate bullet if it goes out of bounds
+    if (bullet->x < 0 || bullet->x > WIDTH || bullet->y < 0 || bullet->y > HEIGHT) {
+        bullet->active = 0;
+        return;
+    }
 
     // Get the size of the texture
     sfVector2u textureSize = sfTexture_getSize(sfSprite_getTexture(bullet->sprite));
@@ -66,12 +62,3 @@ void drawBullet(struct bulletStruct* bullet, sfRenderWindow* window) {
     sfSprite_setRotation(bullet->sprite, bullet->angle);
     sfRenderWindow_drawSprite(window, bullet->sprite, NULL);
 }
-
-
-    
-    
-    
-    
-
-
-

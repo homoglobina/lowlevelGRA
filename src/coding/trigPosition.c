@@ -6,10 +6,8 @@
 sfVector2f checkPosition(float x, float y, int width,int height){
     if (x > width ) x = 0;
     else if (x < 0) x = width;
-
     if (y > height) y = 0;
     else if (y < 0) y = height;
-
     return (sfVector2f){x,y};
 }
 
