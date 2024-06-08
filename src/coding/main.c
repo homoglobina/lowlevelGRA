@@ -6,13 +6,17 @@ int main()
 {
 
     // Create the window
-    sfVideoMode mode = {800, 600, 32};
-    sfRenderWindow* window = sfRenderWindow_create(mode, "SFML TUTORIAL", sfResize | sfClose, NULL);
+    sfVideoMode mode = {1920, 1080, 32};
+    sfRenderWindow* window = sfRenderWindow_create(mode, "TOP GUN", sfResize | sfClose, NULL);
     if (!window)
         return 1;
 
     // Call the function to load the texture and create the sprite
     player();
+
+
+    struct enemyStruct adam;
+    enemy(&adam);
 
     while (sfRenderWindow_isOpen(window))
     {
@@ -28,12 +32,14 @@ int main()
         if (sfKeyboard_isKeyPressed(1))
             sfRenderWindow_close(window);
 
-        sfRenderWindow_clear(window, sfBlack);
+        sfRenderWindow_clear(window, sfBlue);
 
         // Draw the sprite onto the window
-        draw(window);
+        drawPlayer(window);
+        drawEnemy(window, &adam);
 
 
+        // Display the window contents
         sfRenderWindow_display(window);
     }
 

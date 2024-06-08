@@ -3,7 +3,17 @@
 
 #include <SFML/Graphics.h>
 
+struct enemyStruct
+{
+    sfSprite* sprite;
+    double x;
+    double y;
+};
+
+
 void player();
-void draw(sfRenderWindow* window);
+void drawPlayer(sfRenderWindow* window);
+void enemy(struct enemyStruct* enemy);
+void drawEnemy(sfRenderWindow* window, struct enemyStruct* enemy);
 
 #endif // GAME_H

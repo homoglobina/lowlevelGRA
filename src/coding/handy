@@ -1,0 +1,17 @@
+// Set color C
+sfSprite_setColor(enemy->sprite, sfRed);
+sfSprite_setColor(enemy->sprite, sfColor((255, 255, 255, 128))); // half transparent
+
+
+//C++
+sprite.setColor(sf::Color(0, 255, 0)); // green
+sprite.setColor(sf::Color(255, 255, 255, 128)); // half transparent
+
+
+
+// rotation C
+sfSprite_setRotation(enemy->sprite,90.f); // absolute angle
+sfSprite_rotate(enemy->sprite,90.f); // offset relative to the current angle
+
+//C++
+sprite.rotate(15.f); // offset relative to the current angle
