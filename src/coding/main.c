@@ -1,31 +1,33 @@
 #include <SFML/Graphics.h>
 #include <SFML/Window.h>
+#include <stdlib.h>
+#include <time.h>
 #include "game.h"
 
 int main() {
+    srand((unsigned int)time(NULL));
+
     // Create the window
     sfVideoMode mode = {WIDTH, HEIGHT, 32};
-    sfRenderWindow* window = sfRenderWindow_create(mode, "TOP GUN\t THE GAME", sfResize | sfClose, NULL);
+    sfRenderWindow* window = sfRenderWindow_create(mode, "TOP GUN THE GAME", sfResize | sfClose, NULL);
     if (!window)
         return 1;
 
-    sfVector2i position = {0, 0};
+    sfVector2i position = {200, 200};
     sfRenderWindow_setPosition(window, position);
 
     // Call the functions to load the texture and create the sprites
     player();
-    int n = 0;
 
-    struct enemyStruct adam;
-    enemy(&adam);
+    struct enemyStruct ships[NUM_ENEMIES];
+    for (int i = 0; i < NUM_ENEMIES; i++) {
+        enemy(&ships[i]);
+    }
 
     struct bulletStruct bullets[NUM_BULLETS];
     for (int i = 0; i < NUM_BULLETS; i++) {
         initializeBullet(&bullets[i]);
     }
-
-
-
 
     while (sfRenderWindow_isOpen(window)) {
         sfEvent event;
@@ -38,7 +40,7 @@ int main() {
         if (sfKeyboard_isKeyPressed(sfKeyEscape)){
             int choice = menu();
             if (choice == 1) {
-                sfRenderWindow_close(window);
+                // sfRenderWindow_close(window);
             }
             else if (choice == 2) {
                 // sfRenderWindow_close(window);
@@ -48,20 +50,21 @@ int main() {
             }
         }
 
-
         // Clear the window
         sfRenderWindow_clear(window, sfBlue);
 
         // Draw the sprites onto the window
-        drawEnemy(window, &adam);
+        for (int j = 0; j < NUM_ENEMIES; j++) {
+            if (ships[j].active) drawEnemy(window, &ships[j]);
+        }
 
-        if (n == NUM_BULLETS) n = 0;
-        drawPlayer(window, bullets);
 
         for (int j = 0; j < NUM_BULLETS; j++) {
             if (bullets[j].active) drawBullet(&bullets[j], window);
         }
 
+        drawPlayer(window, bullets);
+        
         // Display the window contents
         sfRenderWindow_display(window);
     }

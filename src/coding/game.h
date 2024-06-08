@@ -1,10 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
 
-#defin NUM_ENEMIES 5
+#define NUM_ENEMIES 5
 #define NUM_BULLETS 80
-#define WIDTH 1920
-#define HEIGHT 1080
+#define WIDTH 1000
+#define HEIGHT 800
 
 #include <SFML/Graphics.h>
 
@@ -13,6 +13,7 @@ struct enemyStruct {
     sfSprite* sprite;
     double x;
     double y;
+    int active;
 };
 
 struct bulletStruct {
