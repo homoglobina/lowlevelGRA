@@ -1,13 +1,17 @@
 #include "game.h"
 #include <SFML/Graphics.h>
+#include <SFML/Window.h>
+
 #include <stdio.h>
 
 // Declare a global variable to hold the sprite
 sfSprite* sprite;
+double x = 0.0f; 
+double y = 0.0f;
 
 void player()
 {
-    sfTexture* texture = sfTexture_createFromFile("star.png", NULL);
+    sfTexture* texture = sfTexture_createFromFile("coding/textures/test.png", NULL);
     if (!texture)
     {
         printf("Error loading texture\n");
@@ -19,7 +23,7 @@ void player()
     sfSprite_setTexture(sprite, texture, sfTrue);
 
     // Set the sprite's scale
-    sfVector2f scale = {0.5f, 0.5f};
+    sfVector2f scale = {0.02f, 0.02f};
     sfSprite_setScale(sprite, scale);
 
     // Set the sprite's position
@@ -33,7 +37,26 @@ void player()
 
 void draw(sfRenderWindow* window)
 {
-    // Clear the window with a suitable color (e.g., black)
+
+    // Sterowanie
+    if (sfKeyboard_isKeyPressed(0)){        // A
+        sfVector2f position = {--x, --y};
+        sfSprite_setPosition(sprite, position);
+        }
+    if (sfKeyboard_isKeyPressed(3)){          // D
+        sfVector2f position = {++x, ++y};
+        sfSprite_setPosition(sprite, position);
+        }
+    if (sfKeyboard_isKeyPressed(18)){        // S
+        sfVector2f position = {--x, ++y};
+        sfSprite_setPosition(sprite, position);
+        }
+    if (sfKeyboard_isKeyPressed(22)){      // W
+        sfVector2f position = {++x, --y};
+        sfSprite_setPosition(sprite, position);
+        }
+
+
     sfRenderWindow_clear(window, sfBlack);
 
     // Draw the sprite onto the window

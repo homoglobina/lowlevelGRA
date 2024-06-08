@@ -4,6 +4,7 @@
 
 int main()
 {
+
     // Create the window
     sfVideoMode mode = {800, 600, 32};
     sfRenderWindow* window = sfRenderWindow_create(mode, "SFML TUTORIAL", sfResize | sfClose, NULL);
@@ -22,13 +23,16 @@ int main()
                 sfRenderWindow_close(window);
         }
 
-        if (sfKeyboard_isKeyPressed(0))
+
+        // Exit
+        if (sfKeyboard_isKeyPressed(1))
             sfRenderWindow_close(window);
 
         sfRenderWindow_clear(window, sfBlack);
 
         // Draw the sprite onto the window
         draw(window);
+
 
         sfRenderWindow_display(window);
     }
