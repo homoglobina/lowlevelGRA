@@ -2,52 +2,51 @@
 #include <SFML/Window.h>
 #include "game.h"
 
-
-
-
-
-int main()
-{
-
+int main() {
     // Create the window
     sfVideoMode mode = {WIDTH, HEIGHT, 32};
     sfRenderWindow* window = sfRenderWindow_create(mode, "TOP GUN", sfResize | sfClose, NULL);
     if (!window)
         return 1;
 
-    
-    
-    
+    sfVector2i position = {0, 0};
+    sfRenderWindow_setPosition(window, position);
+
     // Call the functions to load the texture and create the sprites
     player();
+    int n = 0;
+
     struct enemyStruct adam;
     enemy(&adam);
 
+    struct bulletStruct bullets[NUM_BULLETS];
+    for (int i = 0; i < NUM_BULLETS; i++) {
+        initializeBullet(&bullets[i]);
+    }
 
-
-    while (sfRenderWindow_isOpen(window))
-    {
+    while (sfRenderWindow_isOpen(window)) {
         sfEvent event;
-        while (sfRenderWindow_pollEvent(window, &event))
-        {
+        while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed)
                 sfRenderWindow_close(window);
         }
 
-
         // Exit
-        if (sfKeyboard_isKeyPressed(1))
+        if (sfKeyboard_isKeyPressed(sfKeyEscape))
             sfRenderWindow_close(window);
-
 
         // Clear the window
         sfRenderWindow_clear(window, sfBlue);
 
-
-        // Draw the sprite onto the window
+        // Draw the sprites onto the window
         drawEnemy(window, &adam);
-        drawPlayer(window);
 
+        if (n == NUM_BULLETS) n = 0;
+        drawPlayer(window, bullets);
+
+        for (int j = 0; j < NUM_BULLETS; j++) {
+            if (bullets[j].active) drawBullet(&bullets[j], window);
+        }
 
         // Display the window contents
         sfRenderWindow_display(window);
