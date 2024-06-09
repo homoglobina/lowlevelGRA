@@ -8,11 +8,7 @@
 int score = 0;
 int playerHP = 100;
 int level = 1;
-
-
-
-
-
+int repetitions = 0;
 
 
 int main() {
@@ -42,21 +38,22 @@ int main() {
     for (int i = 0; i < NUM_BULLETS; i++) {
         initializeBullet(&bullets[i]);
     }
+    
+    struct explosionStruct *boom = malloc(5 * sizeof(struct explosionStruct));
+    if (!boom) {
+        return 1; // Memory allocation failed
+    }
+
+    for (int i = 0; i < 5; i++) {
+        intiliazieExplosion(&boom[i]);
+    }
+
+
 
     sfRenderWindow_setVerticalSyncEnabled(window, sfTrue); // Enable VSync
 
 
-
-    // Load Textures
-
-    sfTexture* explosionTexture;
-
-    explosionTexture = sfTexture_createFromFile("coding/textures/explosion.png", NULL);
-    if (!explosionTexture) {
-        printf("Error loading explosion texture\n");
-        return 1;
-    }
-
+    initializeTextObjects();
 
     while (sfRenderWindow_isOpen(window)) {
         sfEvent event;
@@ -65,22 +62,20 @@ int main() {
                 sfRenderWindow_close(window);
         }
 
-        if (sfKeyboard_isKeyPressed(sfKeyEscape)){
+        if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
             int choice = menu();
             if (choice == 1) {
                 // sfRenderWindow_close(window);
-            }
-            else if (choice == 2) {
+            } else if (choice == 2) {
                 // sfRenderWindow_close(window);
-            }
-            else if (choice == 3) {
+            } else if (choice == 3) {
                 sfRenderWindow_close(window);
             }
         }
 
         sfRenderWindow_clear(window, sfBlue);
 
-        printLevel(level, playerHP,score, window);
+        printLevel(level, playerHP, score, window);
 
         int deadEnemies = 0;
         for (int j = 0; j < numEnemies; j++) {
@@ -88,9 +83,8 @@ int main() {
             else deadEnemies++;
         }
 
-        if(deadEnemies == numEnemies){
+        if (deadEnemies == numEnemies) {
             level++;
-            
             numEnemies = NUM_ENEMIES + level * 2;
             ships = realloc(ships, numEnemies * sizeof(struct enemyStruct));
             if (!ships) {
@@ -109,8 +103,14 @@ int main() {
         for (int j = 0; j < numEnemies; j++) {
             if (ships[j].active) {
                 for (int i = 0; i < NUM_BULLETS; i++) {
-                    if (checkShot(&bullets[i], &ships[j], explosionTexture)) {
-                        score += 25*level;
+                    if (checkShot(&bullets[i], &ships[j])) {
+                        score += 25 * level;
+                        setExplosion(ships[j].x, ships[j].y, &boom[repetitions]);
+                        repetitions++;
+                        if (repetitions == 4){
+                            repetitions = 0;
+                            boom = realloc(boom, 5 * sizeof(struct explosionStruct));
+                        }
                         break; // Bullet has hit, move to the next enemy
                     }
                 }
@@ -123,11 +123,16 @@ int main() {
             }
         }
 
+        for (int i = 0; i < 5; i++) {
+            drawExplosion(&boom[i], window);
+        }
+
         drawPlayer(window, bullets);
 
         sfRenderWindow_display(window);
     }
 
+    free(boom); // Free allocated memory
     free(ships); // Free allocated memory
     sfRenderWindow_destroy(window);
     return 0;

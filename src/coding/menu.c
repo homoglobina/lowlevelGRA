@@ -3,6 +3,11 @@
 #include "game.h"
 #include <stdio.h>
 
+sfFont* font;
+sfText* levelText;
+sfText* statsText;
+
+
 int menu() {
 
     sfFont* font = sfFont_createFromFile("coding/textures/zerovelo.ttf");
@@ -77,39 +82,44 @@ int menu() {
     sfRenderWindow_destroy(window);
 }
 
-void printLevel(int level, int hp,int score, sfRenderWindow* window) {
-    sfFont* font = sfFont_createFromFile("coding/textures/zerovelo.ttf");
+void initializeTextObjects() {
+    font = sfFont_createFromFile("coding/textures/zerovelo.ttf");
     if (!font){
         printf("Error loading font\n");
+        return;
     }
+
+    levelText = sfText_create();
+    statsText = sfText_create();
+
+    sfText_setFont(levelText, font);
+    sfText_setCharacterSize(levelText, 60);
+    sfText_setPosition(levelText, (sfVector2f){40, 50});
+    sfText_setColor(levelText, sfBlack);
+
+    sfText_setFont(statsText, font);
+    sfText_setCharacterSize(statsText, 35);
+    sfText_setPosition(statsText, (sfVector2f){40, 135});
+    sfText_setColor(statsText, sfWhite);
+    
+
+}
+
+
+
+void printLevel(int level, int hp,int score, sfRenderWindow* window) {
+
 
     sfText* text = sfText_create();
 
     char levelString[50];
     sprintf(levelString, "LEVEL %d\n", level);
-    sfText_setString(text, levelString);
-    sfText_setFont(text, font);
-    sfText_setCharacterSize(text, 60);
-    sfText_setPosition(text, (sfVector2f){40, 50});
-    sfText_setColor(text, sfBlack);
-    sfRenderWindow_drawText(window, text, NULL);
+    sfText_setString(levelText, levelString);
+    sfRenderWindow_drawText(window, levelText, NULL);
 
-
-
-
-    sfText* text2 = sfText_create();
 
     char hpString[50];
     sprintf(hpString, "score: %d\n hp: %d\n", score, hp);
-    sfText_setString(text2, hpString);
-    sfText_setFont(text2, font);
-    sfText_setCharacterSize(text2, 35);
-    sfText_setPosition(text2, (sfVector2f){40, 135});
-    sfText_setColor(text2, sfWhite);
-
-    sfRenderWindow_drawText(window, text2, NULL);
-
-
-
-
+    sfText_setString(statsText, hpString);
+    sfRenderWindow_drawText(window, statsText, NULL);
 }
