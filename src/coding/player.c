@@ -3,16 +3,20 @@
 #include <SFML/Window.h>
 #include <stdio.h>
 #include <time.h>
-
+#include <math.h>
+#include <stdlib.h>
 
 sfSprite* sprite;
 double x = 420.0f; 
-double y = 20.0f;
+double y = 120.0f;
 double angle = 0.0f;
-float speed = 1.5f;
+float speed = 4.0f;
 int n = 0;
 time_t lastSpacePressTime = 0;
 double spaceCooldown = 0.5; 
+
+time_t lastHitPressTime = 0;
+double hitCooldown = 2.0; 
 
 
 void player() {
@@ -31,6 +35,7 @@ void player() {
     // Set the sprite's scale
     sfVector2f scale = {0.2f, 0.2f};
     sfSprite_setScale(sprite, scale);
+    sfSprite_setColor(sprite, sfWhite);
 
     // Set the sprite's position
     sfVector2f position = {x, y};
@@ -47,8 +52,8 @@ void drawPlayer(sfRenderWindow* window, struct bulletStruct* bullets) {
     if (sfKeyboard_isKeyPressed(sfKeyS)) ++j;
     if (sfKeyboard_isKeyPressed(sfKeyD)) ++i;
 
-    if (speed > 5.0f) speed = 5.0f;
-    if ((speed < 2.5f && j != 0) || (speed < 2.5f && i != 0)) speed += 0.125f;
+    if (speed > 20.0f) speed = 20.0f;
+    if ((speed < 2.5f && j != 0) || (speed < 2.5f && i != 0)) speed += 4.0f;
     if (speed > 1.5f && j == 0 && i == 0) speed -= 0.25f;
 
     if (i == 0 && j == 0) {
@@ -113,4 +118,20 @@ void drawPlayer(sfRenderWindow* window, struct bulletStruct* bullets) {
 
     // Draw the sprite onto the window
     sfRenderWindow_drawSprite(window, sprite, NULL);
+}
+
+int checkPlayerCollision(struct enemyStruct* enemy) {
+    
+    
+
+
+
+    if (abs(enemy->x - x) < 50 && abs(enemy->y - y) < 50) {
+        time_t currentTime = time(NULL);
+        if (currentTime - lastHitPressTime >= hitCooldown) {
+            lastHitPressTime = currentTime;
+            return 1;  // collision
+        }
+    }
+    return 0;  // no collision
 }

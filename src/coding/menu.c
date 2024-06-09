@@ -37,7 +37,7 @@ int menu() {
     if (!window)
         return 1;
 
-    sfVector2i position = {20, 20};
+    sfVector2i position = {900, 200};
     sfRenderWindow_setPosition(window, position);
 
     int choice;
@@ -75,4 +75,41 @@ int menu() {
     }
 
     sfRenderWindow_destroy(window);
+}
+
+void printLevel(int level, int hp,int score, sfRenderWindow* window) {
+    sfFont* font = sfFont_createFromFile("coding/textures/zerovelo.ttf");
+    if (!font){
+        printf("Error loading font\n");
+    }
+
+    sfText* text = sfText_create();
+
+    char levelString[50];
+    sprintf(levelString, "LEVEL %d\n", level);
+    sfText_setString(text, levelString);
+    sfText_setFont(text, font);
+    sfText_setCharacterSize(text, 60);
+    sfText_setPosition(text, (sfVector2f){40, 50});
+    sfText_setColor(text, sfBlack);
+    sfRenderWindow_drawText(window, text, NULL);
+
+
+
+
+    sfText* text2 = sfText_create();
+
+    char hpString[50];
+    sprintf(hpString, "score: %d\n hp: %d\n", score, hp);
+    sfText_setString(text2, hpString);
+    sfText_setFont(text2, font);
+    sfText_setCharacterSize(text2, 35);
+    sfText_setPosition(text2, (sfVector2f){40, 135});
+    sfText_setColor(text2, sfWhite);
+
+    sfRenderWindow_drawText(window, text2, NULL);
+
+
+
+
 }

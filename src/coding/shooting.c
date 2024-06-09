@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <math.h>
 
+
+
 void initializeBullet(struct bulletStruct* bullet) {
     sfTexture* texture = sfTexture_createFromFile("coding/textures/star.png", NULL);
     if (!texture) {
@@ -35,7 +37,7 @@ void activateBullet(struct bulletStruct* bullet, float startAngle, float dx, flo
     bullet->x = dx;
     bullet->y = dy;
     bullet->angle = startAngle;
-    bullet->speed = 8.5f;
+    bullet->speed = 14.f;
 }
 
 void drawBullet(struct bulletStruct* bullet, sfRenderWindow* window) {
@@ -62,7 +64,10 @@ void drawBullet(struct bulletStruct* bullet, sfRenderWindow* window) {
 
 }
 
-int checkShot(struct bulletStruct* bullet, struct enemyStruct* enemy) {
+int checkShot(struct bulletStruct* bullet, struct enemyStruct* enemy, sfTexture* explosionTexture) {
+
+    
+
     if (bullet->active && enemy->active) {
         // Calculate the distance between bullet and enemy
         float dx = bullet->x - enemy->x;
@@ -71,8 +76,10 @@ int checkShot(struct bulletStruct* bullet, struct enemyStruct* enemy) {
         if (distanceSquared < 250.f) { 
             enemy->hp -= 5;
             if (enemy->hp <= 0) {
+                sfSprite_setTexture(enemy->sprite, explosionTexture, sfTrue);
                 enemy->active = 0;
             }
+            bullet->active = 0;
             return 1; // Return 1 to indicate a hit
         }
     }

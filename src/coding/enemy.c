@@ -39,10 +39,10 @@ void enemy(struct enemyStruct* enemy) {
     sfSprite_setRotation(enemy->sprite, 90.f);
 }
 
-void drawEnemy(sfRenderWindow* window, struct enemyStruct* enemy) {
-    if (enemy->axis == 1) enemy->x += randomFloat(0.4f, 3.0f);
+void drawEnemy(sfRenderWindow* window, struct enemyStruct* enemy, int level) {
+    if (enemy->axis == 1) enemy->x += 2.5f * level;
     else {
-        enemy->y += randomFloat(0.4f, 3.0f);
+        enemy->y += 2.5f * level;
         sfSprite_setRotation(enemy->sprite, 180.f);
     }
 
