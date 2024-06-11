@@ -59,8 +59,9 @@ int menu() {
 
             }
             else if (sfKeyboard_isKeyPressed(28)){
-                //return choice = 2;
-                //sfRenderWindow_close(window);
+                showScore(window);
+                sfRenderWindow_close(window);
+                return choice =2;
             }
             else if (sfKeyboard_isKeyPressed(29)){
                 sfRenderWindow_close(window);
@@ -101,7 +102,7 @@ int deadScreen(int score) {
     sfText_setColor(lostText, sfBlack);
 
     sfText* deadText = sfText_create();
-    sfText_setString(deadText, "1. Retry\n2.Save Score\n3infern. Highscores\n4. Quit\n");
+    sfText_setString(deadText, "1. Retry\n2. Save Score\n3. Leaderboard\n4. Quit\n");
     sfText_setFont(deadText, font);
     sfText_setCharacterSize(deadText, 20);
     sfText_setPosition(deadText, (sfVector2f){40, 100});
@@ -124,18 +125,28 @@ int deadScreen(int score) {
             if (event.type == sfEvtClosed) {
                 sfRenderWindow_close(window);
             }
-            else if (sfKeyboard_isKeyPressed(27)){
+            else if (sfKeyboard_isKeyPressed(27)){  // Retry
                 sfRenderWindow_close(window);
                 return choice = 1;
 
             }
-            else if (sfKeyboard_isKeyPressed(28)){
-                sfRenderWindow_close(window);
+            else if (sfKeyboard_isKeyPressed(28)){  // Save Score
+                char playerName[50];
+                getPlayerName(playerName, sizeof(playerName), window);
+                addScore(playerName, score);
+                showScore(window);
+                //sfRenderWindow_close(window);
                 return choice = 2;
             }
-            else if (sfKeyboard_isKeyPressed(29)){
+            else if (sfKeyboard_isKeyPressed(29)){  // LEADERBOARD
+                showScore(window);
+                
                 sfRenderWindow_close(window);
                 return choice = 3;
+            }
+            else if (sfKeyboard_isKeyPressed(30)){  // QUIT
+                sfRenderWindow_close(window);
+                return choice = 4;
             }
         }
 

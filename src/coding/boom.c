@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 
-void intiliazieExplosion(struct explosionStruct* boom) {
+void initializeExplosion(struct explosionStruct* boom) {
     sfTexture* texture = sfTexture_createFromFile("coding/textures/explosion.png", NULL);
     if (!texture) {
         printf("Error loading texture\n");

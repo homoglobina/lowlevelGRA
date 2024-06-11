@@ -5,11 +5,15 @@
 #include <time.h>
 #include "game.h"
 
+#define MAX_EXPLOSIONS 5
+
 int score = 0;
 int playerHP = 100;
 int level = 1;
 int repetitions = 0;
 int isHit = 0;
+
+void startGame(sfRenderWindow* window);
 
 int main() {
     srand((unsigned int)time(NULL));
@@ -22,12 +26,28 @@ int main() {
     sfVector2i position = {0, 0};
     sfRenderWindow_setPosition(window, position);
 
+    while (sfRenderWindow_isOpen(window)) {
+        startGame(window);
+    }
+
+    sfRenderWindow_destroy(window);
+    return 0;
+}
+
+void startGame(sfRenderWindow* window) {
+    score = 0;
+    playerHP = 100;
+    level = 1;
+    repetitions = 0;
+    isHit = 0;
+
     player();
 
     int numEnemies = NUM_ENEMIES + level * 2;
     struct enemyStruct *ships = malloc(numEnemies * sizeof(struct enemyStruct));
     if (!ships) {
-        return 1; // Memory allocation failed
+        printf("Memory allocation failed\n");
+        return;
     }
 
     for (int i = 0; i < numEnemies; i++) {
@@ -38,20 +58,17 @@ int main() {
     for (int i = 0; i < NUM_BULLETS; i++) {
         initializeBullet(&bullets[i]);
     }
-    
-    struct explosionStruct *boom = malloc(5 * sizeof(struct explosionStruct));
+
+    struct explosionStruct *boom = malloc(MAX_EXPLOSIONS * sizeof(struct explosionStruct));
     if (!boom) {
-        return 1; // Memory allocation failed
+        printf("Memory allocation failed\n");
+        free(ships);
+        return;
     }
 
-    for (int i = 0; i < 5; i++) {
-        intiliazieExplosion(&boom[i]);
+    for (int i = 0; i < MAX_EXPLOSIONS; i++) {
+        initializeExplosion(&boom[i]);
     }
-
-
-
-    // sfRenderWindow_setVerticalSyncEnabled(window, sfTrue); // Enable VSync
-
 
     initializeTextObjects();
 
@@ -64,23 +81,15 @@ int main() {
 
         if (sfKeyboard_isKeyPressed(sfKeyEscape)) {
             int choice = menu();
-            if (choice == 1) {
-                // sfRenderWindow_close(window);
-            } else if (choice == 2) {
-                // sfRenderWindow_close(window);
-            } else if (choice == 3) {
-                sfRenderWindow_close(window);
-            }
+            if (choice == 3) sfRenderWindow_close(window);
         }
-
 
         if (isHit == 1){
             sfRenderWindow_clear(window, sfRed);
             isHit = 0;
+        } else {
+            sfRenderWindow_clear(window, sfBlue);
         }
-        else sfRenderWindow_clear(window, sfBlue);
-
-        printLevel(level, playerHP, score, window);
 
         int deadEnemies = 0;
         for (int j = 0; j < numEnemies; j++) {
@@ -93,7 +102,9 @@ int main() {
             numEnemies = NUM_ENEMIES + level * 2;
             ships = realloc(ships, numEnemies * sizeof(struct enemyStruct));
             if (!ships) {
-                return 1; // Memory allocation failed
+                printf("Memory allocation failed\n");
+                free(boom);
+                return;
             }
 
             for (int i = 0; i < numEnemies; i++) {
@@ -112,57 +123,41 @@ int main() {
                         score += 25 * level;
                         setExplosion(ships[j].x, ships[j].y, &boom[repetitions]);
                         repetitions++;
-                        if (repetitions == 4){
+                        if (repetitions == 4) {
                             repetitions = 0;
-                            boom = realloc(boom, 5 * sizeof(struct explosionStruct));
+                            boom = realloc(boom, MAX_EXPLOSIONS * sizeof(struct explosionStruct));
                         }
-                        break; // Bullet has hit, move to the next enemy
+                        break;
                     }
                 }
                 if (checkPlayerCollision(&ships[j])) {
                     playerHP -= 10;
                     isHit = 1;
                     if (playerHP <= 0) {
-                        int choice = deadScreen(level);
-
-                        switch (choice)
-                        {
-                        case 1:
-                            /* code */
-                            break;
-                        case 2: // Save score
-                            char playerName[50];
-                            getPlayerName(playerName, sizeof(playerName), window);
-                            addScore(playerName, score);
-                            break;
-                        case 3:
-                            /* code */
-                            break;
-                        case 4:
-                            /* code */
-                            break;
-                        
-                        default:
-                            break;
+                        int choice = deadScreen(score);
+                        if (choice == 4) {
+                            sfRenderWindow_close(window);
+                        } else if (choice == 1) {
+                            free(boom);
+                            free(ships);
+                            return; // Restart the game
                         }
-
-                        sfRenderWindow_close(window);
                     }
                 }
             }
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < MAX_EXPLOSIONS; i++) {
             drawExplosion(&boom[i], window);
         }
 
         drawPlayer(window, bullets);
 
+        printLevel(level, playerHP, score, window);
+
         sfRenderWindow_display(window);
     }
 
-    free(boom); // Free allocated memory
-    free(ships); // Free allocated memory
-    sfRenderWindow_destroy(window);
-    return 0;
+    free(boom);
+    free(ships);
 }
