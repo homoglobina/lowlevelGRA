@@ -20,22 +20,22 @@ double hitCooldown = 2.0;
 
 
 void player() {
-    sfTexture* texture = sfTexture_createFromFile("coding/textures/plane.png", NULL);
+    sfTexture* texture = sfTexture_createFromFile("coding/textures/plane128x128.png", NULL);
     if (!texture) {
         printf("Error loading texture\n");
         return;
     }
 
-    sfTexture_setSmooth(texture, 1);
+    sfTexture_setSmooth(texture, 0);
 
     // Create the sprite and set its texture
     sprite = sfSprite_create();
     sfSprite_setTexture(sprite, texture, sfTrue);
 
     // Set the sprite's scale
-    sfVector2f scale = {0.2f, 0.2f};
+    sfVector2f scale = {.6f, .6f};
     sfSprite_setScale(sprite, scale);
-    sfSprite_setColor(sprite, sfWhite);
+    // sfSprite_setColor(sprite, sfWhite);
 
     // Set the sprite's position
     sfVector2f position = {x, y};
@@ -52,9 +52,23 @@ void drawPlayer(sfRenderWindow* window, struct bulletStruct* bullets) {
     if (sfKeyboard_isKeyPressed(sfKeyS)) ++j;
     if (sfKeyboard_isKeyPressed(sfKeyD)) ++i;
 
-    if (speed > 20.0f) speed = 20.0f;
-    if ((speed < 2.5f && j != 0) || (speed < 2.5f && i != 0)) speed += 4.0f;
-    if (speed > 1.5f && j == 0 && i == 0) speed -= 0.25f;
+    // Sterowanie 2
+    if (j == 0 && i == 0) {   // no keys pressed
+        if (speed < 1.5f) speed = 1.5f;
+        else speed -= 0.5f;
+        
+    }
+    else {
+        if (speed < 3.0f) speed += 0.25f;
+        else if (speed >= 8.0f) speed = 8.0f;
+        else speed += 0.5f;
+    }
+
+    // // Sterowanie 1
+    // if (speed > 20.0f) speed = 20.0f;
+    // if (speed > 0.0f) speed = 0.0f;
+    // if ((speed < 2.5f && j != 0) || (speed < 2.5f && i != 0)) speed += 4.0f;
+    // if (speed > 1.5f && j == 0 && i == 0) speed -= 0.25f;
 
     if (i == 0 && j == 0) {
         // no rotation

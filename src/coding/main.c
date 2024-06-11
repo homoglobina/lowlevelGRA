@@ -9,7 +9,7 @@ int score = 0;
 int playerHP = 100;
 int level = 1;
 int repetitions = 0;
-
+int isHit = 0;
 
 int main() {
     srand((unsigned int)time(NULL));
@@ -50,7 +50,7 @@ int main() {
 
 
 
-    sfRenderWindow_setVerticalSyncEnabled(window, sfTrue); // Enable VSync
+    // sfRenderWindow_setVerticalSyncEnabled(window, sfTrue); // Enable VSync
 
 
     initializeTextObjects();
@@ -73,7 +73,12 @@ int main() {
             }
         }
 
-        sfRenderWindow_clear(window, sfBlue);
+
+        if (isHit == 1){
+            sfRenderWindow_clear(window, sfRed);
+            isHit = 0;
+        }
+        else sfRenderWindow_clear(window, sfBlue);
 
         printLevel(level, playerHP, score, window);
 
@@ -116,7 +121,31 @@ int main() {
                 }
                 if (checkPlayerCollision(&ships[j])) {
                     playerHP -= 10;
+                    isHit = 1;
                     if (playerHP <= 0) {
+                        int choice = deadScreen(level);
+
+                        switch (choice)
+                        {
+                        case 1:
+                            /* code */
+                            break;
+                        case 2: // Save score
+                            char playerName[50];
+                            getPlayerName(playerName, sizeof(playerName), window);
+                            addScore(playerName, score);
+                            break;
+                        case 3:
+                            /* code */
+                            break;
+                        case 4:
+                            /* code */
+                            break;
+                        
+                        default:
+                            break;
+                        }
+
                         sfRenderWindow_close(window);
                     }
                 }

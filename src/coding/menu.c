@@ -6,7 +6,8 @@
 sfFont* font;
 sfText* levelText;
 sfText* statsText;
-
+sfText* lostText;
+sfText* deadText;
 
 int menu() {
 
@@ -82,6 +83,82 @@ int menu() {
     sfRenderWindow_destroy(window);
 }
 
+
+int deadScreen(int score) {
+    sfFont* font = sfFont_createFromFile("coding/textures/zerovelo.ttf");
+    
+    if (!font){
+        printf("Error loading font\n");
+        return 0;
+    }
+
+
+    sfText* lostText = sfText_create();
+    sfText_setString(lostText, "You LOST\n");
+    sfText_setFont(lostText, font);
+    sfText_setCharacterSize(lostText, 35);
+    sfText_setPosition(lostText, (sfVector2f){35, 35});
+    sfText_setColor(lostText, sfBlack);
+
+    sfText* deadText = sfText_create();
+    sfText_setString(deadText, "1. Retry\n2.Save Score\n3infern. Highscores\n4. Quit\n");
+    sfText_setFont(deadText, font);
+    sfText_setCharacterSize(deadText, 20);
+    sfText_setPosition(deadText, (sfVector2f){40, 100});
+    sfText_setColor(deadText, sfBlack);
+
+
+    sfRenderWindow* window;
+    sfVideoMode mode = {300, 200, 32};
+    window = sfRenderWindow_create(mode, "You Lost", sfResize | sfClose, NULL);
+    if (!window)
+        return 0;
+
+    sfVector2i position = {750, 300};
+    sfRenderWindow_setPosition(window, position);
+
+    int choice;
+    sfEvent event;
+    while (sfRenderWindow_isOpen(window)) {
+        while (sfRenderWindow_pollEvent(window, &event)) {
+            if (event.type == sfEvtClosed) {
+                sfRenderWindow_close(window);
+            }
+            else if (sfKeyboard_isKeyPressed(27)){
+                sfRenderWindow_close(window);
+                return choice = 1;
+
+            }
+            else if (sfKeyboard_isKeyPressed(28)){
+                sfRenderWindow_close(window);
+                return choice = 2;
+            }
+            else if (sfKeyboard_isKeyPressed(29)){
+                sfRenderWindow_close(window);
+                return choice = 3;
+            }
+        }
+
+        // Clear the window
+        sfRenderWindow_clear(window, sfRed);
+
+        sfRenderWindow_drawText(window, lostText, NULL);
+        sfRenderWindow_drawText(window, deadText, NULL);
+        
+
+
+        // Display the window contents
+        sfRenderWindow_display(window);
+    }
+
+    sfRenderWindow_destroy(window);
+}
+
+
+
+
+
+
 void initializeTextObjects() {
     font = sfFont_createFromFile("coding/textures/zerovelo.ttf");
     if (!font){
@@ -104,8 +181,6 @@ void initializeTextObjects() {
     
 
 }
-
-
 
 void printLevel(int level, int hp,int score, sfRenderWindow* window) {
 

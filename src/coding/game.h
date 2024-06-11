@@ -58,6 +58,10 @@ void drawBullet(struct bulletStruct* bullet, sfRenderWindow* window);
 
 void initializeTextObjects();
 int menu();
+int deadScreen(int level);
 void printLevel(int level, int hp, int score, sfRenderWindow* window);
+
+void addScore(const char *name, int score);
+void getPlayerName(char *playerName, int maxLen, sfRenderWindow *window);
 
 #endif // GAME_H
