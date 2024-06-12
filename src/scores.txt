@@ -1,1 +1,4 @@
-siedem 25
+
+cebula 325
+jabko 1000
+burak 625

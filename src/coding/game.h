@@ -48,7 +48,7 @@ int checkPlayerCollision(struct enemyStruct* enemy);
 void enemy(struct enemyStruct* enemy);
 void drawEnemy(sfRenderWindow* window, struct enemyStruct* enemy, int level);
 
-void intiliazieExplosion(struct explosionStruct* boom);
+void initializeExplosion(struct explosionStruct* boom);
 void drawExplosion(struct explosionStruct* boom, sfRenderWindow* window);
 void setExplosion(float x, float y, struct explosionStruct* boom);
 
@@ -61,6 +61,7 @@ int menu();
 int deadScreen(int level);
 void printLevel(int level, int hp, int score, sfRenderWindow* window);
 
+void showScore(sfRenderWindow *window);
 void addScore(const char *name, int score);
 void getPlayerName(char *playerName, int maxLen, sfRenderWindow *window);
 
